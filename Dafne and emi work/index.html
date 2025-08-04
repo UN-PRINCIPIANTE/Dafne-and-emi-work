@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>🎉 Trivia Mágica Rota Fiesta 🎉</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Prevenir zoom en iOS y mejorar rendimiento */
+        html {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            touch-action: manipulation;
+        }
+        
+        body {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: none;
+        }
+        
+        /* Fix para notch en iPhone X+ */
+        @supports (padding: max(0px)) {
+            .game-container {
+                padding-left: max(20px, env(safe-area-inset-left));
+                padding-right: max(20px, env(safe-area-inset-right));
+                padding-top: max(20px, env(safe-area-inset-top));
+                padding-bottom: max(20px, env(safe-area-inset-bottom));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Audio Elements -->
+    <audio id="correctSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+    </audio>
+    <audio id="incorrectSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+    </audio>
+    <audio id="levelUpSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+    </audio>
+    <audio id="gameOverSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
+    </audio>
+
+    <div class="game-container">
+        <!-- Floating Elements -->
+        <div class="floating-elements">
+            <div class="floating-star">⭐</div>
+            <div class="floating-heart">💖</div>
+            <div class="floating-rainbow">🌈</div>
+            <div class="floating-balloon">🎈</div>
+            <div class="floating-gift">🎁</div>
+        </div>
+
+        <!-- Pantalla de Inicio -->
+        <div id="startScreen" class="screen active">
+            <div class="start-content">
+                <h1 class="main-title animated-title">
+                    <span class="letter">🎉</span>
+                    <span class="letter">T</span>
+                    <span class="letter">r</span>
+                    <span class="letter">i</span>
+                    <span class="letter">v</span>
+                    <span class="letter">i</span>
+                    <span class="letter">a</span>
+                    <span class="letter"> </span>
+                    <span class="letter">M</span>
+                    <span class="letter">á</span>
+                    <span class="letter">g</span>
+                    <span class="letter">i</span>
+                    <span class="letter">c</span>
+                    <span class="letter">a</span>
+                    <span class="letter"> </span>
+                    <span class="letter">🎉</span>
+                </h1>
+                <div class="subtitle magical-text">¡Una aventura súper divertida de aprendizaje!</div>
+                <div class="level-preview">
+                    <div class="level-card hover-bounce">
+                        <div class="level-icon pulse">🌟</div>
+                        <div class="level-name">Nivel 1: Conceptos Básicos</div>
+                        <div class="sparkles"></div>
+                    </div>
+                    <div class="level-card hover-bounce">
+                        <div class="level-icon pulse">🎯</div>
+                        <div class="level-name">Nivel 2: Métodos</div>
+                        <div class="sparkles"></div>
+                    </div>
+                    <div class="level-card hover-bounce">
+                        <div class="level-icon pulse">🌱</div>
+                        <div class="level-name">Nivel 3: Discipulado</div>
+                        <div class="sparkles"></div>
+                    </div>
+                    <div class="level-card hover-bounce">
+                        <div class="level-icon pulse">🏰</div>
+                        <div class="level-name">Nivel 4: Extensiones</div>
+                        <div class="sparkles"></div>
+                    </div>
+                    <div class="level-card hover-bounce">
+                        <div class="level-icon pulse">👑</div>
+                        <div class="level-name">Nivel 5: Valores</div>
+                        <div class="sparkles"></div>
+                    </div>
+                </div>
+                <button id="startBtn" class="start-btn rainbow-btn">
+                    <i class="fas fa-rocket"></i>
+                    ¡Comenzar Aventura Mágica!
+                    <i class="fas fa-star"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Pantalla de Juego -->
+        <div id="gameScreen" class="screen">
+            <div class="game-header">
+                <div class="level-info">
+                    <span id="currentLevel" class="level-badge animated-badge">
+                        <i class="fas fa-trophy"></i>
+                        Nivel 1
+                    </span>
+                    <span id="levelTheme" class="level-theme">🌟 Conceptos Básicos</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div id="progressFill" class="progress-fill"></div>
+                    </div>
+                    <span id="questionCounter" class="question-counter">1/5</span>
+                </div>
+                <div class="score-display">
+                    <span id="score" class="score animated-score">
+                        <i class="fas fa-gem"></i>
+                        Puntos: 0
+                    </span>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div id="questionText" class="question-text typewriter"></div>
+                <div id="optionsContainer" class="options-container">
+                    <!-- Las opciones se generarán dinámicamente -->
+                </div>
+                <div class="question-decoration"></div>
+            </div>
+
+            <div class="game-controls">
+                <button id="nextBtn" class="next-btn hidden">Siguiente Pregunta</button>
+            </div>
+        </div>
+
+        <!-- Pantalla de Resultados -->
+        <div id="resultsScreen" class="screen">
+            <div class="results-content">
+                <div id="resultsTitle" class="results-title celebration-title">
+                    <div class="fireworks"></div>
+                </div>
+                <div id="finalScore" class="final-score glowing-score">
+                    <i class="fas fa-crown"></i>
+                    <span class="score-number"></span>
+                    <i class="fas fa-crown"></i>
+                </div>
+                <div id="resultsMessage" class="results-message"></div>
+                <div class="results-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="correctAnswers">0</div>
+                        <div class="stat-label">Respuestas Correctas</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalQuestions">0</div>
+                        <div class="stat-label">Total de Preguntas</div>
+                    </div>
+                </div>
+                <button id="playAgainBtn" class="play-again-btn magical-btn">
+                    <i class="fas fa-redo"></i>
+                    ¡Jugar de Nuevo!
+                    <i class="fas fa-magic"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Efectos de Partículas -->
+        <div id="particles" class="particles"></div>
+        <div id="confetti" class="confetti-container"></div>
+        <div id="magicalEffects" class="magical-effects"></div>
+    </div>
+
+    <script src="sounds.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
